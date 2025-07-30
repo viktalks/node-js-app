@@ -1,31 +1,70 @@
-# Node.js CI/CD with Jenkins and Docker 🚀
+# Node.js CI/CD Pipeline with Jenkins, Docker, and Webhook Integration
 
-This is a simple Node.js Express application deployed using a Jenkins CI/CD pipeline and Docker.
+This project demonstrates a complete CI/CD pipeline using **Jenkins**, **Docker**, **GitHub Webhook**, and **Node.js**. It builds a simple Node.js app, runs tests, builds a Docker image, pushes it to DockerHub, and can optionally deploy it to a staging environment.
+
+---
+
+## 🧾 Features
+
+- Node.js app with Express
+- Jest testing integrated
+- Jenkins pipeline with declarative syntax
+- Dockerized application
+- Pushes image to DockerHub
+- Webhook integration with GitHub
+
+---
 
 ## 📁 Project Structure
 
 ```
 .
-├── app.js         # Express app
-├── server.js      # Entry point to start the server
-├── Dockerfile     # Docker configuration
-├── package.json   # NPM dependencies
-├── app.test.js    # Jest test file
-├── deploy.sh      # Deployment script
+├── Dockerfile
+├── app.js
+├── app.test.js
+├── deploy.sh
+├── package.json
+├── package-lock.json
+├── server.js
+└── Jenkinsfile
 ```
 
 ---
 
-## 📦 Requirements
+## 🧑‍💻 Steps to Set Up
 
-- Node.js
-- Docker
-- Jenkins (with Docker and pipeline plugins)
-- DockerHub account
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/nodejs-jenkins-cicd.git
+cd nodejs-jenkins-cicd
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Test the App
+
+```bash
+npm test
+```
+
+### 4. Run Locally
+
+```bash
+node server.js
+# or
+npm start
+```
+
+App will run on `http://localhost:3000`
 
 ---
 
-## 🐳 Docker Commands
+## 🐳 Docker
 
 ### Build Docker Image
 
@@ -33,66 +72,44 @@ This is a simple Node.js Express application deployed using a Jenkins CI/CD pipe
 docker build -t viktalks/nodejs-jenkins-cicd:latest .
 ```
 
-### Run Locally
+### Run Docker Container
 
 ```bash
-docker run -d -p 3000:3000 --name nodejs-container viktalks/nodejs-jenkins-cicd:latest
-```
-
-Then visit: `http://localhost:8080`
-
----
-
-## 🧪 Run Tests
-
-```bash
-npm test
+docker run -p 3000:3000 viktalks/nodejs-jenkins-cicd:latest
 ```
 
 ---
 
-## 🤖 Jenkins Pipeline (Simplified)
+## ⚙️ Jenkins Setup
 
-```groovy
-pipeline {
-  agent any
-  stages {
-    stage('Build Docker Image') {
-      steps {
-        sh 'docker build -t viktalks/nodejs-jenkins-cicd:latest .'
-      }
-    }
-    stage('Push to DockerHub') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-          sh 'echo $PASS | docker login -u $USER --password-stdin'
-          sh 'docker push viktalks/nodejs-jenkins-cicd:latest'
-        }
-      }
-    }
-    stage('Deploy to Staging') {
-      steps {
-        sh './deploy.sh'
-      }
-    }
-  }
-  post {
-    success {
-      echo '✅ Pipeline completed successfully!'
-    }
-    failure {
-      echo '❌ Pipeline failed!'
-    }
-  }
-}
-```
+### Install Plugins:
+
+- Docker Pipeline
+- GitHub Integration
+- NodeJS Plugin
+
+### Pipeline Script
+
+Place your `Jenkinsfile` in the root directory of your project and configure your Jenkins project as a **Pipeline** project pointing to your GitHub repo.
 
 ---
 
-## 📜 License
+## 🔔 Webhook Setup (GitHub to Jenkins)
 
-MIT
+1. Go to your GitHub repository.
+2. Click on **Settings** > **Webhooks** > **Add Webhook**.
+3. Payload URL: `http://<jenkins-server>:8080/github-webhook/`
+4. Content Type: `application/json`
+5. Events: Just the push event
+6. Save.
+
+Make sure:
+
+- Your Jenkins has GitHub plugin installed.
+- Project is set to **"Build when a change is pushed to GitHub"** in build triggers.
 
 ---
 
-Want a walkthrough video? Check out [@VikTalks](https://instagram.com/viktalks) on Instagram!
+## 📝 Author
+
+Made with ❤️ by Vikas Tyagi (@viktalks)
