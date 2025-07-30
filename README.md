@@ -36,7 +36,7 @@ docker build -t viktalks/nodejs-jenkins-cicd:latest .
 ### Run Locally
 
 ```bash
-docker run -d -p 8080:3000 --name nodejs-container viktalks/nodejs-jenkins-cicd:latest
+docker run -d -p 3000:3000 --name nodejs-container viktalks/nodejs-jenkins-cicd:latest
 ```
 
 Then visit: `http://localhost:8080`
